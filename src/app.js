@@ -1,55 +1,46 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import Backbone from 'backbone';
 
 import 'foundation-sites/dist/css/foundation.css';
 import './style.css';
 
-import WizardSchool from './collections/wizard_school';
-import Wizard from './models/wizard';
-
-
-// Starts undefined - we'll set this in $(document).ready
-// once we know the template is available
-let wizardTemplate;
-
-const render = function render(wizardList) {
-  wizardList.forEach((wizard) => {
-    $('#wizards').append(`<li>${wizard.get('name')}</li>`);
-  });
-};
+import Clock from './models/clock';
+import ClockView from './views/clock_view';
 
 $(document).ready(() => {
-  wizardTemplate = _.template($('#book-template').html());
-  //
-  // const example = {
-  //   success: true,
-  //   "not success": false,
-  // };
-  //
-  // example.success == true;
-  // example['success'] == true;
-  // example['not success'] == false;
+  const clockTemplate = _.template($('#clock-template').html());
 
-  const school = new WizardSchool();
-  school.fetch({
-    // success: function success() {
-    //   // this is the success callback
-    // },
-    //
-    // failure() {
-    //   // failure callback
-    // },
+  const bus = _.extend({}, Backbone.Events);
+
+  const clockNYC = new Clock({
+    location: 'New York City',
+    tzOffset: -5,
   });
 
-  school.on('update', function() {
-    render(school);
+  const clockMoscow = new Clock({
+    location: 'Moscow',
+    tzOffset: +3,
   });
 
-  school.add({
-    name: "Charles",
-    house: "Hufflepuff"
+  const clockTokyo = new Clock({
+    location: 'Tokyo',
+    tzOffset: +9,
   });
 
+  const clocks = [clockNYC, clockMoscow, clockTokyo];
+  clocks.forEach((clock) => {
+    const clockView = new ClockView({
+      template: clockTemplate,
+      model: clock,
+      bus: bus,
+    });
 
-  Wizard.someClassFunction();
+    clockView.render();
+    $('main').append(clockView.$el);
+  });
+
+  setInterval(() => {
+    bus.trigger('tick', {hello: "world"});
+  }, 1000);
 });

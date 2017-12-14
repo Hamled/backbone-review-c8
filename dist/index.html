@@ -8,32 +8,19 @@
   </head>
   <body>
     <header>
-      <h1>Welcome to the Backbone Book List</h1>
+      <h1>Welcome to the World Clocks Page</h1>
     </header>
 
     <main class="clearfix">
-      <section class="columns large-8 small-12">
-        <ul id="wizards">
-        </ul>
-      </section>
     </main>
 
     <footer>
       &copy; 2017, Ada Developers Academy
     </footer>
 
-    <script type="text/template" id="book-template">
-      <tr class="book">
-        <td>
-          <%- title %>
-        </td>
-        <td>
-          <%- author %>
-        </td>
-        <td>
-          <%- publication_year %>
-        </td>
-      </tr>
+    <script type="text/template" id="clock-template">
+      <h3><%- location %></h3>
+      <h2><%- time %></h2>
     </script>
   </body>
 </html>
